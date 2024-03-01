@@ -34,7 +34,11 @@
         }
 
         .container {
-            position: relative;
+            
+            display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 80px;
         }
 
         .container .card {
@@ -183,7 +187,7 @@
         }
 
         .container .card .contentBx .color span:nth-child(2) {
-            background: #1BBFE9;
+            background: #5a696d;
         }
 
         .container .card .contentBx .color span:nth-child(3) {
@@ -458,7 +462,7 @@ body {
         $("#eidProduit").val(idProduit)
         $("#enom").val(nom)
         $("#eprix").val(prix)
-        $("#eprix").val(prix)
+        
         
 		
 
@@ -503,7 +507,13 @@ body {
 </head>
 
 <body>
-    <nav style="width: 100%;">
+      
+
+
+  
+
+  
+    <nav class="container-fluid" style="width: 100%;  margin-top: 0px;">
         <div class="navbar">
           <div class="container nav-container">
               <input class="checkbox" type="checkbox" name="" id="" />
@@ -516,21 +526,21 @@ body {
               <h1>Navbar</h1>
             </div>
             <div class="menu-items">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">about</a></li>
-              <li><a href="#">blogs</a></li>
-              <li><a href="#">portfolio</a></li>
-              <li><a href="#">contact</a></li>
+              <li><a href="/index">Home</a></li>
+              <li><a href="/pannier">Pannier</a></li>
+              <li><a href="/logout">Déconnecter</a></li>
+              
+              <li><a href="/produit">Admin</a></li>
             </div>
           </div>
         </div>
       </nav>
-
-      <div class="container" style="display: flex;">
+ 
+      <div class="container" style="display: flex; margin-top: 100px;">
         <% produits.forEach((prod)=>{%>
         <div class="card">
             <div class="imgBx">
-                <img src="" alt="<%=prod.nom%>">
+                <img src="../public/images/<%=prod.image%>" alt="<%=prod.nom%>">
             </div>
 
             <div class="contentBx">
@@ -541,11 +551,11 @@ body {
 
                 <div class="prix">
 
-                    <h3>Prix : <%= prod.prix%></h3>
+                    <h3>Prix : <%= prod.prix%> DHS</h3>
 
 
                 </div>
-                <a href="#ajouterVentes" data-id="<%= prod.idProduit%>" data-nom="<%= prod.nom%>" data-prix="<%= prod.prix%>" data-marque="<%= prod.marque%>" class="vente" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                <a href="#ajouterVentes" data-id="<%= prod.idProduit%>" data-nom="<%= prod.nom%>" data-prix="<%= prod.prix%>" data-marque="<%= prod.marque%>" class="vente" data-toggle="modal">Ajouter</a>
              
             </div>
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const VenteSchema = new mongoose.Schema({
+  idV: { type: String },
   datevente: { type: Date, default: Date.now },
   quantite: { type: Number, required: true },
   idProduit: { type: String },
