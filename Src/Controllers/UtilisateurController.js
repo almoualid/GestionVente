@@ -1,19 +1,11 @@
 const User = require('../Models/Utilisateur'); 
+const Produit =require('../Models/Produit');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
+const jwt = require('jsonwebtoken')
 const saltRounds = 10;
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Specify the upload directory
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop());
-  },
-});
-
-const upload = multer({ storage: storage });
+const passport = require('passport');
 
 const signup = async (req, res) => {
   const { nom, email, mdp } = req.body;
@@ -29,24 +21,13 @@ const signup = async (req, res) => {
     // Hacher le mot de passe avec bcrypt
     const hashedPassword = await bcrypt.hash(mdp, saltRounds);
 
-    // Use Multer to handle image upload
-    upload.single('imageU')(req, res, async (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Erreur lors du téléchargement de l\'image.' });
-      }
+    // Créer un nouvel utilisateur avec le mot de passe haché
+    const newUser = new User({ nom, email, mdp: hashedPassword });
 
-      // File uploaded successfully, get the filename
-      const imageFilename = req.file ? req.file.filename : null;
+ 
+    await newUser.save();
 
-      // Créer un nouvel utilisateur avec le mot de passe haché et le nom du fichier image
-      const newUser = new User({ nom, email, mdp: hashedPassword, imageU: imageFilename });
-
-      // Sauvegarder l'utilisateur dans la base de données
-      await newUser.save();
-
-      res.status(201).json({ message: 'Inscription réussie.' });
-    });
+    res.status(201).json({ message: 'Inscription réussie.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de l\'inscription.' });
@@ -54,8 +35,7 @@ const signup = async (req, res) => {
 };
 
 
-
-const login = async (req, res) => {
+/*const login = async (req, res) => {
     const { email, mdp } = req.body;
   
     try {
@@ -78,7 +58,96 @@ const login = async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Une erreur est survenue lors de la connexion.' });
     }
-  };
+  };*/
+
+  /*const login = async (req, res) =>{
+    const { email, mdp} = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.json({ message: "user introuvable" });
+    } else {
+        bcrypt.compare(mdp,
+            user.mdp).then(resultat => {
+                if (!resultat) {
+                    return res.json({ message: "Incorrect password" });
+                }
+                else {
+                    const payload = {
+                        email,
+                        nom: user.nom,
+                        id: user.id
+                    };
+                    jwt.sign(payload, "secret", (err,
+                        token) => {
+                        if (err) console.log(err);
+                        else {
+                            res.redirect('/index');
+                        }
+                    });
+                }
+            });
+    }
+};*/
+/*const login = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed.' });
+    }
+
+    req.login(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      return res.status(200).json({ message: 'Login successful.', user });
+    });
+  })(req, res, next);
+};*/
+
+
+const login = async (req, res) => {
+  const { email, mdp } = req.body;
+
+  try {
+      // Find the user by email
+      const user = await User.findOne({ email });
+
+      if (!user) {
+          return res.status(401).json({ message: 'Identifiants incorrects' });
+      }
+
+      // Compare the provided password with the hashed password stored in the database
+      const passwordMatch = await bcrypt.compare(mdp, user.mdp);
+
+      if (!passwordMatch) {
+          return res.status(401).json({ message: 'Identifiants incorrects' });
+      }
+
+      // Set the user's email in the session
+      req.session.email = user.email;
+
+      // Respond with success
+      res.redirect('/index');
+      console.log('Session:', req.session);
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Une erreur est survenue lors de la connexion.' });
+  }
+};
+
+
+
+
+
+
+
+
+
 
   const logout = (req, res) => {
     // Détruire la session
@@ -93,4 +162,13 @@ const login = async (req, res) => {
     });
   };
 
-module.exports = { signup,login,logout };
+
+  listProduit=async (req,res)=>{
+    //récupérer la liste des étudiants
+    const produits=await Produit.find()
+    res.render('utilisateurs/index',{produits:produits})
+
+
+}
+
+module.exports = { signup,login,logout,listProduit};

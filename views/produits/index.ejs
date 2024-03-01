@@ -283,7 +283,7 @@ $(function(){
 						<h2>Gestion <b>Produits</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Nouveau Etudiant</span></a>
+						<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Nouveau Produit</span></a>
 											
 					</div>
 				</div>
@@ -310,7 +310,7 @@ $(function(){
 						<td><%= prod.marque%></td>
 						<td><%= prod.prix%></td>
 						<td><%= prod.qtestock%></td>
-						<td> <img src="../public/images/<%= prod.image %>" alt=""></td>
+						<td> <img src="../public/images/<%=prod.image %>" alt="image"></td>
 						<td>
 							<a href="#editEmployeeModal" data-qtestock="<%= prod.qtestock%>"  data-prix="<%= prod.prix%>" data-marque="<%= prod.marque%>" data-nom="<%= prod.nom%>" data-id="<%= prod.idProduit%>" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 							<a href="#deleteEmployeeModal" data-numd="<%= prod.idProduit%>" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>

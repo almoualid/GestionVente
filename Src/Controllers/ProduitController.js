@@ -1,6 +1,6 @@
-// importer le modèle qui expose un ensemble des méthodes d'accès aux données
-const Produit = require('../Models/Produit');
-const Etudiant=require('../Models/Produit')
+
+const Produit =require('../Models/Produit');
+
 
 // Définir les actions
 
@@ -22,7 +22,7 @@ exports.addProd = async (req, res) => {
         const image = req.files.image ? req.files.image.name : "default.png";
 
         // Save the file to the public/images directory
-        const destPath = path.join(__dirname, '../public/images/', image);
+        const destPath = path.join(__dirname, '../../views/public/images', image);
         req.files.image.mv(destPath, (err) => {
             if (err) {
                 console.error(err);
